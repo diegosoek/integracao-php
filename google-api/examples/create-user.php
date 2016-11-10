@@ -52,21 +52,52 @@ if ($credentials_file = checkServiceAccountCredentialsFile()) {
 }
 
 $client->setApplicationName("Client_Library_Examples");
-$client->setScopes(['https://www.googleapis.com/auth/books']);
-$service = new Google_Service_Books($client);
+$client->setScopes(['https://www.googleapis.com/auth/admin.directory.user',
+    'https://www.googleapis.com/auth/admin.directory.group']);
+$client->setSubject("impersonate_user");
 
-/************************************************
-  We're just going to make the same call as in the
-  simple query as an example.
- ************************************************/
-$optParams = array('filter' => 'free-ebooks');
-$results = $service->volumes->listVolumes('Henry David Thoreau', $optParams);
-?>
+$service = new Google_Service_Directory($client);
 
-<h3>Results Of Call:</h3>
-<?php foreach ($results as $item): ?>
-  <?= $item['volumeInfo']['title'] ?>
-  <br />
-<?php endforeach ?>
+/**
+ * Create the user
+ */
+$nameInstance = new Google_Service_Directory_UserName();
+$nameInstance -> setGivenName('John');
+$nameInstance -> setFamilyName('Doe');
+$email = 'paulofaia@gedu.demo.mestra.org';
+$password = '123123123123';
+$userInstance = new Google_Service_Directory_User();
+$userInstance -> setName($nameInstance);
+$userInstance -> setHashFunction("MD5");
+$userInstance -> setPrimaryEmail($email);
+$userInstance -> setPassword(hash("md5", $password));
+try
+{
+  $createUserResult = $service->users->insert($userInstance);
+  var_dump($createUserResult);
+}
+catch (Google_IO_Exception $gioe)
+{
+  echo "Error in connection: ".$gioe->getMessage();
+}
+catch (Google_Service_Exception $gse)
+{
+  echo "User already exists: ".$gse->getMessage();
+}
+/**
+ * If you want it, add the user to a group
+ */
+$memberInstance = new Google_Service_Directory_Member();
+$memberInstance->setEmail($email);
+$memberInstance->setRole('MEMBER');
+$memberInstance->setType('USER');
+try
+{
+  $insertMembersResult = $service->members->insert('group_name', $memberInstance);
+}
+catch (Google_IO_Exception $gioe)
+{
+  echo "Error in connection: ".$gioe->getMessage();
+}
 
-<?php pageFooter(__FILE__); ?>
+pageFooter(__FILE__);
