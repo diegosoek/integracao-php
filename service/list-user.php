@@ -15,8 +15,8 @@
  * limitations under the License.
  */
 
-include_once __DIR__ . '/google-api/vendor/autoload.php';
-include_once "templates/base.php";
+include_once __DIR__ . '/../google-api/vendor/autoload.php';
+include_once "../templates/base.php";
 
 echo pageHeader("Service Account Access");
 
@@ -51,30 +51,26 @@ if ($credentials_file = checkServiceAccountCredentialsFile()) {
   return;
 }
 
+$impersonate_user = getImpersonateUsers();
+
 $client->setApplicationName("Client_Library_Examples");
 $client->setScopes(['https://www.googleapis.com/auth/admin.directory.user',
     'https://www.googleapis.com/auth/admin.directory.group']);
-$client->setSubject("impersonate_user");
+$client->setSubject("$impersonate_user");
 
 $service = new Google_Service_Directory($client);
 
 /**
  * Create the user
  */
-$nameInstance = new Google_Service_Directory_UserName();
-$nameInstance -> setGivenName('John');
-$nameInstance -> setFamilyName('Doe');
-$email = 'paulofaia@gedu.demo.mestra.org';
-$password = '123123123123';
-$userInstance = new Google_Service_Directory_User();
-$userInstance -> setName($nameInstance);
-$userInstance -> setHashFunction("MD5");
-$userInstance -> setPrimaryEmail($email);
-$userInstance -> setPassword(hash("md5", $password));
+$optParams = array(
+  'customer' => 'my_customer',
+  'maxResults' => 10,
+  'orderBy' => 'email',
+);
 try
 {
-  $createUserResult = $service->users->insert($userInstance);
-  var_dump($createUserResult);
+  $results = $service->users->listUsers($optParams);
 }
 catch (Google_IO_Exception $gioe)
 {
@@ -84,20 +80,11 @@ catch (Google_Service_Exception $gse)
 {
   echo "User already exists: ".$gse->getMessage();
 }
-/**
- * If you want it, add the user to a group
- */
-$memberInstance = new Google_Service_Directory_Member();
-$memberInstance->setEmail($email);
-$memberInstance->setRole('MEMBER');
-$memberInstance->setType('USER');
-try
-{
-  $insertMembersResult = $service->members->insert('group_name', $memberInstance);
-}
-catch (Google_IO_Exception $gioe)
-{
-  echo "Error in connection: ".$gioe->getMessage();
+
+if(isset($results)){
+  foreach ($results as $result){
+    echO("<div>" . $result->name->fullName . " - " . $result->primaryEmail . "</div>");
+  }
 }
 
 pageFooter(__FILE__);

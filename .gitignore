@@ -47,3 +47,4 @@ Temporary Items
 .apdisk
 
 /google-api/service-account-credentials.json
+/google-api/.impersonate

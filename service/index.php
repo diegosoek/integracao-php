@@ -11,27 +11,41 @@
 
 <?= pageHeader("PHP Library Examples"); ?>
 
-<?php if (isset($_POST['api_key'])): ?>
-<?php setApiKey($_POST['api_key']) ?>
+<?php if (isset($_POST['user_email'])): ?>
+<?php setImpersonateUsers($_POST['user_email']) ?>
 <span class="warn">
-  API Key set!
+  Usuário setado!
 </span>
 <?php endif ?>
 
-<?php if (!validateApiKeyService()){ ?>
-<div class="api-key">
-  <strong>Você precisa incluir o JSON com as chaves na pasta google-api</strong>
-</div>
+<?php if (!validateApiKeyService() || !getImpersonateUsers()){ ?>
+  <?php if (!validateApiKeyService()){ ?>
+    <div class="api-key">
+      <strong>Você precisa incluir o JSON com as chaves na pasta google-api</strong>
+    </div>
+  <?php } ?>
+  <?php if (!getImpersonateUsers()){ ?>
+    <div class="api-key">
+      <strong>Usuário para impersonificar</strong>
+      <form method="post">
+        Email do usuário:<input type="text" name="user_email" />
+        <input type="submit" />
+      </form>
+      <em>Para manipular os dados precisa ser um superadmin</em>
+    </div>
+  <?php } ?>
 <?php } else { ?>
 <ul>
-  <li><a href="simple-query.php">A query using simple API access</a></li>
-  <li><a href="url-shortener.php">Authorize a url shortener, using OAuth 2.0 authentication.</a></li>
-  <li><a href="batch.php">An example of combining multiple calls into a batch request</a></li>
-  <li><a href="service-account.php">A query using the service account functionality.</a></li>
-  <li><a href="simple-file-upload.php">An example of a small file upload.</a></li>
-  <li><a href="large-file-upload.php">An example of a large file upload.</a></li>
-  <li><a href="idtoken.php">An example of verifying and retrieving the id token.</a></li>
-  <li><a href="multi-api.php">An example of using multiple APIs.</a></li>
+<?php
+if ($handle = opendir('.')) {
+    while (false !== ($entry = readdir($handle))) {
+        if ($entry != "." && $entry != "..") {
+            echo "<li><a href='$entry'>$entry</a></li>";
+        }
+    }
+    closedir($handle);
+}
+?>
 </ul>
 <?php } ?>
 

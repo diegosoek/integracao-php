@@ -150,3 +150,19 @@ function setApiKey($apiKey)
   $file = __DIR__ . '/../../tests/.apiKey';
   file_put_contents($file, $apiKey);
 }
+
+function getImpersonateUsers()
+{
+  $file = __DIR__ . '/../google-api/.impersonate';
+  if (file_exists($file)) {
+    return file_get_contents($file);
+  }else{
+    return false;
+  }
+}
+
+function setImpersonateUsers($email)
+{
+  $file = __DIR__ . '/../google-api/.impersonate';
+  file_put_contents($file, $email);
+}
