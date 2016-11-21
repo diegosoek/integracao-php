@@ -12,7 +12,7 @@ function pageHeader($title)
   <html>
   <head>
     <title>" . $title . "</title>
-    <link href='styles/style.css' rel='stylesheet' type='text/css' />
+    <link href='/styles/style.css' rel='stylesheet' type='text/css' />
   </head>
   <body>\n";
   if ($_SERVER['PHP_SELF'] != "/index.php") {
@@ -102,7 +102,7 @@ function missingOAuth2CredentialsWarning()
 function checkServiceAccountCredentialsFile()
 {
   // service account creds
-  $application_creds = __DIR__ . '/../../service-account-credentials.json';
+  $application_creds = __DIR__ . '/../google-api/service-account-credentials.json';
 
   return file_exists($application_creds) ? $application_creds : false;
 }
@@ -125,13 +125,24 @@ function setClientCredentialsFile($apiKey)
   file_put_contents($file, $apiKey);
 }
 
-
 function getApiKey()
 {
   $file = __DIR__ . '/../../tests/.apiKey';
   if (file_exists($file)) {
     return file_get_contents($file);
   }
+}
+
+function validateApiKeyService()
+{
+  $file = __DIR__ . '/../google-api/service-account-credentials.json';
+  return file_exists($file);
+}
+
+function validateApiKeyClient()
+{
+  $file = __DIR__ . '/../google-api/client-account-credentials.json';
+  return file_exists($file);
 }
 
 function setApiKey($apiKey)

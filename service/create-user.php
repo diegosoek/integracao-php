@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-include_once __DIR__ . '/../vendor/autoload.php';
+include_once __DIR__ . '/google-api/vendor/autoload.php';
 include_once "templates/base.php";
 
 echo pageHeader("Service Account Access");
