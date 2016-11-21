@@ -36,16 +36,7 @@
   <?php } ?>
 <?php } else { ?>
 <ul>
-<?php
-if ($handle = opendir('.')) {
-    while (false !== ($entry = readdir($handle))) {
-        if ($entry != "." && $entry != "..") {
-            echo "<li><a href='$entry'>$entry</a></li>";
-        }
-    }
-    closedir($handle);
-}
-?>
+  <li><a href="users.php">Usuários</a></li>
 </ul>
 <?php } ?>
 

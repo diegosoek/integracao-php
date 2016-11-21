@@ -81,6 +81,8 @@ catch (Google_Service_Exception $gse)
   echo "User already exists: ".$gse->getMessage();
 }
 
+echo("<a href='create-user.php'>Adicionar usuário</a>");
+
 if(isset($results)){
   foreach ($results as $result){
     echO("<div>" . $result->name->fullName . " - " . $result->primaryEmail . "</div>");

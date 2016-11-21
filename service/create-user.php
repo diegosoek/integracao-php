@@ -15,8 +15,8 @@
  * limitations under the License.
  */
 
-include_once __DIR__ . '/google-api/vendor/autoload.php';
-include_once "templates/base.php";
+include_once __DIR__ . '/../google-api/vendor/autoload.php';
+include_once "../templates/base.php";
 
 echo pageHeader("Service Account Access");
 
@@ -25,79 +25,65 @@ echo pageHeader("Service Account Access");
   account.
  ************************************************/
 
-$client = new Google_Client();
+if(isset($_POST["givenName"])){
 
-/************************************************
-  ATTENTION: Fill in these values, or make sure you
-  have set the GOOGLE_APPLICATION_CREDENTIALS
-  environment variable. You can get these credentials
-  by creating a new Service Account in the
-  API console. Be sure to store the key file
-  somewhere you can get to it - though in real
-  operations you'd want to make sure it wasn't
-  accessible from the webserver!
-  Make sure the Books API is enabled on this
-  account as well, or the call will fail.
- ************************************************/
+  $client = new Google_Client();
 
-if ($credentials_file = checkServiceAccountCredentialsFile()) {
-  // set the location manually
-  $client->setAuthConfig($credentials_file);
-} elseif (getenv('GOOGLE_APPLICATION_CREDENTIALS')) {
-  // use the application default credentials
-  $client->useApplicationDefaultCredentials();
-} else {
-  echo missingServiceAccountDetailsWarning();
-  return;
+  if ($credentials_file = checkServiceAccountCredentialsFile()) {
+    // set the location manually
+    $client->setAuthConfig($credentials_file);
+  } elseif (getenv('GOOGLE_APPLICATION_CREDENTIALS')) {
+    // use the application default credentials
+    $client->useApplicationDefaultCredentials();
+  } else {
+    echo missingServiceAccountDetailsWarning();
+    return;
+  }
+
+  $impersonate_user = getImpersonateUsers();
+
+  $client->setApplicationName("Client_Library_Examples");
+  $client->setScopes(['https://www.googleapis.com/auth/admin.directory.user']);
+  $client->setSubject("$impersonate_user");
+
+  $service = new Google_Service_Directory($client);
+
+  /**
+   * Create the user
+   */
+  $nameInstance = new Google_Service_Directory_UserName();
+  $nameInstance -> setGivenName($_POST["givenName"]);
+  $nameInstance -> setFamilyName($_POST["familyName"]);
+  $email = $_POST["primaryEmail"];
+  $password = $_POST["password"];
+  $userInstance = new Google_Service_Directory_User();
+  $userInstance -> setName($nameInstance);
+  $userInstance -> setHashFunction("MD5");
+  $userInstance -> setPrimaryEmail($email);
+  $userInstance -> setPassword(hash("md5", $password));
+  try
+  {
+    $createUserResult = $service->users->insert($userInstance);
+    var_dump($createUserResult);
+  }
+  catch (Google_IO_Exception $gioe)
+  {
+    echo "Error in connection: ".$gioe->getMessage();
+  }
+  catch (Google_Service_Exception $gse)
+  {
+    echo "User already exists: ".$gse->getMessage();
+  }
 }
 
-$client->setApplicationName("Client_Library_Examples");
-$client->setScopes(['https://www.googleapis.com/auth/admin.directory.user',
-    'https://www.googleapis.com/auth/admin.directory.group']);
-$client->setSubject("impersonate_user");
-
-$service = new Google_Service_Directory($client);
-
-/**
- * Create the user
- */
-$nameInstance = new Google_Service_Directory_UserName();
-$nameInstance -> setGivenName('John');
-$nameInstance -> setFamilyName('Doe');
-$email = 'paulofaia@gedu.demo.mestra.org';
-$password = '123123123123';
-$userInstance = new Google_Service_Directory_User();
-$userInstance -> setName($nameInstance);
-$userInstance -> setHashFunction("MD5");
-$userInstance -> setPrimaryEmail($email);
-$userInstance -> setPassword(hash("md5", $password));
-try
-{
-  $createUserResult = $service->users->insert($userInstance);
-  var_dump($createUserResult);
-}
-catch (Google_IO_Exception $gioe)
-{
-  echo "Error in connection: ".$gioe->getMessage();
-}
-catch (Google_Service_Exception $gse)
-{
-  echo "User already exists: ".$gse->getMessage();
-}
-/**
- * If you want it, add the user to a group
- */
-$memberInstance = new Google_Service_Directory_Member();
-$memberInstance->setEmail($email);
-$memberInstance->setRole('MEMBER');
-$memberInstance->setType('USER');
-try
-{
-  $insertMembersResult = $service->members->insert('group_name', $memberInstance);
-}
-catch (Google_IO_Exception $gioe)
-{
-  echo "Error in connection: ".$gioe->getMessage();
-}
-
+?>
+<form method="POST">
+  <input type="text" name="givenName" placeholder="Nome" required/>
+  <input type="text" name="familyName" placeholder="Sobrenome" required/>
+  <input type="email" name="primaryEmail" placeholder="Email" required/>
+  <input type="text" name="password" placeholder="Senha" required/>
+  <button>Enviar</button>
+</form>
+<?php
 pageFooter(__FILE__);
+?>
