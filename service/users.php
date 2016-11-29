@@ -85,7 +85,7 @@ echo("<a href='create-user.php'>Adicionar usuário</a>");
 
 if(isset($results)){
   foreach ($results as $result){
-    echO("<div>" . $result->name->fullName . " - " . $result->primaryEmail . "</div>");
+    echO("<div>" . $result->name->fullName . " - " . $result->primaryEmail . "<a href='/service/get-user.php?id=" . $result->id . "'>Abrir usuário</a></div>");
   }
 }
 
