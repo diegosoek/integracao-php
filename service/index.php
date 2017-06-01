@@ -36,8 +36,8 @@
   <?php } ?>
 <?php } else { ?>
 <ul>
-  <li><a href="users.php">Usuários</a></li>
-  <li><a href="drive.php">Google Drive</a></li>
+  <li><a href="./users">Usuários</a></li>
+  <li><a href="./drive">Google Drive</a></li>
 </ul>
 <?php } ?>
 

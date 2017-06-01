@@ -1,4 +1,4 @@
-<?php include_once "templates/base.php" ?>
+<?php include_once "../templates/base.php" ?>
 
 <?php if (!isWebRequest()): ?>
   To view this example, run the following command from the root directory of this repository:
@@ -30,14 +30,7 @@
 <?php endif ?>
 
 <ul>
-  <li><a href="simple-query.php">A query using simple API access</a></li>
-  <li><a href="url-shortener.php">Authorize a url shortener, using OAuth 2.0 authentication.</a></li>
-  <li><a href="batch.php">An example of combining multiple calls into a batch request</a></li>
-  <li><a href="service-account.php">A query using the service account functionality.</a></li>
-  <li><a href="simple-file-upload.php">An example of a small file upload.</a></li>
-  <li><a href="large-file-upload.php">An example of a large file upload.</a></li>
-  <li><a href="idtoken.php">An example of verifying and retrieving the id token.</a></li>
-  <li><a href="multi-api.php">An example of using multiple APIs.</a></li>
+  <li><a href="./youtube-live">Youtube Live</a></li>
 </ul>
 
 <?= pageFooter(); ?>
