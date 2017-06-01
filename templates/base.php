@@ -1,5 +1,8 @@
 <?php
-
+ // Start the session (for storing access tokens and things)
+if (!headers_sent()) {
+  session_start();
+}
 /* Ad hoc functions to make the examples marginally prettier.*/
 function isWebRequest()
 {
@@ -19,11 +22,6 @@ function pageHeader($title)
     $ret .= "<p><a href='index.php'>Back</a></p>";
   }
   $ret .= "<header><h1>" . $title . "</h1></header>";
-
- // Start the session (for storing access tokens and things)
-  if (!headers_sent()) {
-    session_start();
-  }
 
   return $ret;
 }
@@ -121,13 +119,13 @@ function getOAuthCredentialsFile()
 
 function setClientCredentialsFile($apiKey)
 {
-  $file = __DIR__ . '/../../tests/.apiKey';
+  $file = __DIR__ . '/../../.apiKey';
   file_put_contents($file, $apiKey);
 }
 
 function getApiKey()
 {
-  $file = __DIR__ . '/../../tests/.apiKey';
+  $file = __DIR__ . '/../../.apiKey';
   if (file_exists($file)) {
     return file_get_contents($file);
   }
@@ -147,7 +145,7 @@ function validateApiKeyClient()
 
 function setApiKey($apiKey)
 {
-  $file = __DIR__ . '/../../tests/.apiKey';
+  $file = __DIR__ . '/../../.apiKey';
   file_put_contents($file, $apiKey);
 }
 
@@ -165,4 +163,43 @@ function setImpersonateUsers($email)
 {
   $file = __DIR__ . '/../google-api/.impersonate';
   file_put_contents($file, $email);
+}
+
+function getGoogleAuthUrl()
+{
+  $client = new Google_Client();
+  $client->setAuthConfigFile(__DIR__ . '/../google-api/client-account-credentials.json');
+  $client->setAccessType("offline");        // offline access
+  $client->addScope(['https://www.googleapis.com/auth/drive', 'https://www.googleapis.com/auth/youtube']);
+  $client->setRedirectUri('http://' . $_SERVER['HTTP_HOST'] . '/client/callback.php');
+  return $client->createAuthUrl();
+}
+
+function getGoogleTokenFromCode(){
+  $client = new Google_Client();
+  $client->setAuthConfigFile(__DIR__ . '/../google-api/client-account-credentials.json');
+  $client->addScope(['https://www.googleapis.com/auth/drive', 'https://www.googleapis.com/auth/youtube']);
+  $client->setRedirectUri('http://' . $_SERVER['HTTP_HOST'] . '/client/callback.php');
+  $jabacule = $client->fetchAccessTokenWithAuthCode($_GET['code']);
+  setAccessToken($jabacule);
+  header('Location: /client');
+}
+
+function getGoogleClient(){
+  $client = new Google_Client();
+  $client->setAuthConfigFile(__DIR__ . '/../google-api/client-account-credentials.json');
+  $client->setAccessToken($_SESSION["access_token"]);
+  return $client;
+}
+
+function getAccessToken()
+{
+  if(isset($_SESSION["access_token"]) && isset($_SESSION["access_token"]["access_token"])){
+    return $_SESSION["access_token"];
+  }
+}
+
+function setAccessToken($access_token)
+{
+  $_SESSION["access_token"] = $access_token;
 }

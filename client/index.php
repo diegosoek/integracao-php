@@ -1,4 +1,7 @@
-<?php include_once "../templates/base.php" ?>
+<?php 
+include_once __DIR__ . '/../google-api/vendor/autoload.php';
+include_once "../templates/base.php" 
+?>
 
 <?php if (!isWebRequest()): ?>
   To view this example, run the following command from the root directory of this repository:
@@ -11,26 +14,16 @@
 
 <?= pageHeader("PHP Library Examples"); ?>
 
-<?php if (isset($_POST['api_key'])): ?>
-<?php setApiKey($_POST['api_key']) ?>
-<span class="warn">
-  API Key set!
-</span>
-<?php endif ?>
-
-<?php if (!getApiKey()): ?>
+<?php if (!getAccessToken()): ?>
 <div class="api-key">
-  <strong>You have not entered your API key</strong>
-  <form method="post">
-    API Key:<input type="text" name="api_key" />
-    <input type="submit" />
-  </form>
-  <em>This can be found in the <a href="http://developers.google.com/console" target="_blank">Google API Console</em>
+  <strong>You have not login token</strong>
+  <a href="<?php echo(getGoogleAuthUrl()); ?>">Login with Google</a>
 </div>
-<?php endif ?>
-
+<?php else: ?>
 <ul>
   <li><a href="./youtube-live">Youtube Live</a></li>
 </ul>
+<?php endif ?>
+
 
 <?= pageFooter(); ?>
