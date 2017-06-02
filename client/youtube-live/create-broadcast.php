@@ -53,34 +53,9 @@ if(isset($_POST["title"])){
   // Execute the request and return an object that contains information
   // about the new broadcast.
   $broadcastsResponse = $youtube->liveBroadcasts->insert('snippet,status', $broadcastInsert, array());
+  
+  header('Location: /client/youtube-live/');
 
-  // Create an object for the liveStream resource's snippet. Specify a value
-  // for the snippet's title.
-  $streamSnippet = new Google_Service_YouTube_LiveStreamSnippet();
-  $streamSnippet->setTitle($_POST["title"]);
-
-  // Create an object for content distribution network details for the live
-  // stream and specify the stream's format and ingestion type.
-  $cdn = new Google_Service_YouTube_CdnSettings();
-  $cdn->setFormat("1080p");
-  $cdn->setIngestionType('rtmp');
-
-  // Create the API request that inserts the liveStream resource.
-  $streamInsert = new Google_Service_YouTube_LiveStream();
-  $streamInsert->setSnippet($streamSnippet);
-  $streamInsert->setCdn($cdn);
-  $streamInsert->setKind('youtube#liveStream');
-
-  // Execute the request and return an object that contains information
-  // about the new stream.
-  $streamsResponse = $youtube->liveStreams->insert('snippet,cdn', $streamInsert, array());
-  var_dump($bindBroadcastResponse);
-  // Bind the broadcast to the live stream.
-  $bindBroadcastResponse = $youtube->liveBroadcasts->bind(
-      $broadcastsResponse['id'],'id,contentDetails',
-      array(
-          'streamId' => $streamsResponse['id'],
-      ));
 }
 
 ?>
