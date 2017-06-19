@@ -39,6 +39,9 @@ if(isset($_POST["title"])){
   $broadcastSnippet->setScheduledStartTime('2017-06-29T00:00:00-03:00');
   $broadcastSnippet->setScheduledEndTime('2017-06-30T00:00:00-03:00');
 
+  $contentDetails = new Google_Service_YouTube_LiveBroadcastContentDetails();
+  $contentDetails->setEnableLowLatency(true);
+
   // Create an object for the liveBroadcast resource's status, and set the
   // broadcast's status to "private".
   $status = new Google_Service_YouTube_LiveBroadcastStatus();
@@ -47,12 +50,13 @@ if(isset($_POST["title"])){
   // Create the API request that inserts the liveBroadcast resource.
   $broadcastInsert = new Google_Service_YouTube_LiveBroadcast();
   $broadcastInsert->setSnippet($broadcastSnippet);
+  $broadcastInsert->setContentDetails($contentDetails);
   $broadcastInsert->setStatus($status);
   $broadcastInsert->setKind('youtube#liveBroadcast');
 
   // Execute the request and return an object that contains information
   // about the new broadcast.
-  $broadcastsResponse = $youtube->liveBroadcasts->insert('snippet,status', $broadcastInsert, array());
+  $broadcastsResponse = $youtube->liveBroadcasts->insert('snippet,contentDetails,status', $broadcastInsert, array());
   
   header('Location: /client/youtube-live/');
 

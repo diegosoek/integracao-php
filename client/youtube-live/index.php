@@ -32,11 +32,31 @@ if(isset($results)){
 }
 
 ?>
-<script src="https://apis.google.com/js/platform.js" async defer>
-</script> 
-<div class="g-hangout" data-render="createhangout"
-     data-initial_apps="[{ app_id : '123456789012', start_data : 'trDBBNIzwJU', 'app_type' : 'ROOM_APP' }]"> 
- </div>
+<script src="https://apis.google.com/js/platform.js" async defer></script> 
+
+<div id="placeholder-div"></div>
+
+<script>
+window.___gcfg = {
+  lang: 'en-US'
+};
+
+(function() {
+  var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+  po.src = 'https://apis.google.com/js/platform.js?onload=renderButton';
+  var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+})();
+
+function renderButton(){
+  gapi.hangout.render('placeholder-div', {
+      'render': 'createhangout',
+      'hangout_type'  :'onair',
+      'initial_apps': [
+        { app_id : '992304351793', start_data : 'bANs4Pq52ak', 'app_type' : 'ROOM_APP' }
+      ]
+    });
+}
+</script>
 <?php
 
 try {
@@ -56,6 +76,7 @@ echo("<h3>Live Broadcasts</h3>");
 if(isset($results)){
   echo("<ul>");
   foreach ($results['items'] as $streamItem) {
+    print_r($streamItem);
     echo("<li>" . $streamItem['snippet']['title'] . " (" . $streamItem['id'] . ")</li>");
   }
   echo('</ul>');
