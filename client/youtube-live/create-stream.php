@@ -62,8 +62,8 @@ if(isset($_POST["title"])){
   // Create an object for content distribution network details for the live
   // stream and specify the stream's format and ingestion type.
   $cdn = new Google_Service_YouTube_CdnSettings();
-  $cdn->setFormat("1080p");
-  $cdn->setIngestionType('dash');
+  $cdn->setFormat("360p");
+  $cdn->setIngestionType('rtmp');
 
   // Create the API request that inserts the liveStream resource.
   $streamInsert = new Google_Service_YouTube_LiveStream();
