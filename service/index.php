@@ -36,8 +36,9 @@
   <?php } ?>
 <?php } else { ?>
 <ul>
-  <li><a href="./users">Usuários</a></li>
   <li><a href="./drive">Google Drive</a></li>
+  <li><a href="./users">Usuários</a></li>
+  <li><a href="./youtube-live">Youtube Live</a></li>
 </ul>
 <?php } ?>
 

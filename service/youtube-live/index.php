@@ -4,7 +4,7 @@ include_once __DIR__ . '/../../google-api/vendor/autoload.php';
 
 echo pageHeader("Service Account Access");
 
-$client = getGoogleClient();
+$client = getGoogleService();
 
 $youtube = new Google_Service_YouTube($client);
 $results = null;

@@ -14,9 +14,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-include_once __DIR__ . '/../../google-api/vendor/autoload.php';
 include_once "../../templates/base.php";
+include_once __DIR__ . '/../../google-api/vendor/autoload.php';
 
 echo pageHeader("Service Account Access");
 
@@ -25,35 +24,15 @@ echo pageHeader("Service Account Access");
   account.
  ************************************************/
 
-$client = getGoogleService();
-$service = new Google_Service_Drive($client);
+if(isset($_GET["id"])){
 
-/**
- * Create the user
- */
-$optParams = array(
-  'pageSize' => 10,
-  'fields' => 'nextPageToken, files(id, name)'
-);
-try
-{
-  $results = $service->files->listFiles($optParams);
-}
-catch (Google_IO_Exception $gioe)
-{
-  echo "Error in connection: ".$gioe->getMessage();
-}
-catch (Google_Service_Exception $gse)
-{
-  echo "User already exists: ".$gse->getMessage();
-}
+  $client = getGoogleService();
+  $stream_id = $_GET["id"];
 
-echo("<a href='create-user.php'>Adicionar usuário</a>");
-
-if(isset($results)){
-  foreach ($results as $result){
-    echO("<div>" . $result->id . " - " . $result->name . "<a href='/service/get_file.php?id=" . $result->id . "'>Abrir arquivo</a></div>");
-  }
+  $youtube = new Google_Service_YouTube($client);
+  
+  $broadcastsResponse = $youtube->liveStreams->delete($stream_id);
+  
 }
-
-pageFooter(__FILE__);
+header('Location: /service/youtube-live/');
+?>

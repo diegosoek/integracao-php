@@ -192,6 +192,23 @@ function getGoogleClient(){
   return $client;
 }
 
+function getGoogleService(){
+  $client = new Google_Client();
+  if ($credentials_file = checkServiceAccountCredentialsFile()) {
+    $client->setAuthConfig($credentials_file);
+  } elseif (getenv('GOOGLE_APPLICATION_CREDENTIALS')) {
+    $client->useApplicationDefaultCredentials();
+  } else {
+    echo missingServiceAccountDetailsWarning();
+    return;
+  }
+  $impersonate_user = getImpersonateUsers();
+  $client->setApplicationName("Client_Library_Examples");
+  $client->setScopes(['https://www.googleapis.com/auth/drive', 'https://www.googleapis.com/auth/youtube']);
+  $client->setSubject("$impersonate_user");
+  return $client;
+}
+
 function getAccessToken()
 {
   if(isset($_SESSION["access_token"]) && isset($_SESSION["access_token"]["access_token"])){
