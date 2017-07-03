@@ -34,10 +34,14 @@ if(isset($_POST["title"])){
    */
   // Create an object for the liveBroadcast resource's snippet. Specify values
   // for the snippet's title, scheduled start time, and scheduled end time.
+  $tomorrow = date('Y-m-d', strtotime(' +1 day'));
+  $day = date("d",strtotime($tomorrow));
+  $month = date("m",strtotime($tomorrow));
+  $year = date("Y",strtotime($tomorrow));
   $broadcastSnippet = new Google_Service_YouTube_LiveBroadcastSnippet();
   $broadcastSnippet->setTitle($_POST["title"]);
-  $broadcastSnippet->setScheduledStartTime('2017-07-01T00:00:00-03:00');
-  $broadcastSnippet->setScheduledEndTime('2017-07-01T00:00:00-03:00');
+  $broadcastSnippet->setScheduledStartTime($year . "-" . $month . "-" . $day . 'T00:00:00-03:00');
+  $broadcastSnippet->setScheduledEndTime($year . "-" . $month . "-" . $day . 'T00:00:00-03:00');
 
   // Create an object for the liveBroadcast resource's status, and set the
   // broadcast's status to "private".
