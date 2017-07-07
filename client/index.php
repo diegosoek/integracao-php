@@ -22,6 +22,7 @@ include_once "../templates/base.php"
 <?php else: ?>
 <ul>
   <li><a href="./youtube-live">Youtube Live</a></li>
+  <li><a href="./execution-api">Execution API</a></li>
 </ul>
 <?php endif ?>
 

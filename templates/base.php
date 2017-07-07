@@ -170,7 +170,7 @@ function getGoogleAuthUrl()
   $client = new Google_Client();
   $client->setAuthConfigFile(__DIR__ . '/../google-api/client-account-credentials.json');
   $client->setAccessType("offline");        // offline access
-  $client->addScope(['https://www.googleapis.com/auth/drive', 'https://www.googleapis.com/auth/youtube']);
+  $client->addScope(['https://www.googleapis.com/auth/drive', 'https://www.googleapis.com/auth/youtube', 'https://www.googleapis.com/auth/script.external_request', 'https://www.googleapis.com/auth/forms', 'https://www.googleapis.com/auth/spreadsheets']);
   $client->setRedirectUri('http://' . $_SERVER['HTTP_HOST'] . '/client/callback.php');
   return $client->createAuthUrl();
 }
@@ -178,7 +178,7 @@ function getGoogleAuthUrl()
 function getGoogleTokenFromCode(){
   $client = new Google_Client();
   $client->setAuthConfigFile(__DIR__ . '/../google-api/client-account-credentials.json');
-  $client->addScope(['https://www.googleapis.com/auth/drive', 'https://www.googleapis.com/auth/youtube']);
+  $client->addScope(['https://www.googleapis.com/auth/drive', 'https://www.googleapis.com/auth/youtube', 'https://www.googleapis.com/auth/script.external_request', 'https://www.googleapis.com/auth/forms', 'https://www.googleapis.com/auth/spreadsheets']);
   $client->setRedirectUri('http://' . $_SERVER['HTTP_HOST'] . '/client/callback.php');
   $jabacule = $client->fetchAccessTokenWithAuthCode($_GET['code']);
   setAccessToken($jabacule);
