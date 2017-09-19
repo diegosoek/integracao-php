@@ -39,6 +39,7 @@
   <li><a href="./drive">Google Drive</a></li>
   <li><a href="./users">Usuários</a></li>
   <li><a href="./youtube-live">Youtube Live</a></li>
+  <li><a href="./groups-settings">Groups Settings</a></li>
 </ul>
 <?php } ?>
 

@@ -18,7 +18,7 @@
 include_once __DIR__ . '/../../google-api/vendor/autoload.php';
 include_once "../../templates/base.php";
 
-echo pageHeader("Service Account Access");/..
+echo pageHeader("Service Account Access");
 
 /************************************************
   Make an API request authenticated with a service

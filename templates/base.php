@@ -204,7 +204,7 @@ function getGoogleService(){
   }
   $impersonate_user = getImpersonateUsers();
   $client->setApplicationName("Client_Library_Examples");
-  $client->setScopes(['https://www.googleapis.com/auth/drive', 'https://www.googleapis.com/auth/youtube']);
+  $client->setScopes(['https://www.googleapis.com/auth/drive', 'https://www.googleapis.com/auth/youtube', 'https://www.googleapis.com/auth/apps.groups.settings']);
   $client->setSubject("$impersonate_user");
   return $client;
 }
