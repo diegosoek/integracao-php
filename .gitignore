@@ -50,4 +50,4 @@ Temporary Items
 /google-api/.impersonate
 client-account-credentials.json
 
-vendor
+/google-api/vendor
